@@ -47,7 +47,7 @@ backend-test-api/
 ├── routes/
 │   └── api.php                          # API routes definition
 ├── database/migrations/                 # Database schema
-├── postman_collection.json             # Complete API testing collection
+├── Backend Test API - Reyhan Nazera Rusmana.postman_collection.json            # Complete API testing collection
 └── README.md                           # This file
 ```
 
@@ -64,8 +64,8 @@ backend-test-api/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/reyhan-nazera/laravel-backend-test.git
-   cd laravel-backend-test
+   git clone https://github.com/reyhannazera16/backend-api.git
+   cd backend-api
    ```
 
 2. **Install dependencies**
@@ -200,7 +200,7 @@ Accept: application/json
 }
 ```
 
-#### 4. Default Laravel User Endpoint (Protected)
+#### 4. User Endpoint 
 **GET** `/user`
 
 **Headers:**
@@ -236,7 +236,7 @@ Accept: application/json
 
 ### Import Collection
 
-1. Download `postman_collection.json` from this repository
+1. Download `Backend Test API - Reyhan Nazera Rusmana.postman_collection.json` from this repository
 2. Open Postman → **Import** → **Upload Files**
 3. Select the downloaded JSON file
 4. Create environment with variable: `base_url = http://localhost:8000`
@@ -285,41 +285,6 @@ php artisan route:list --path=api
 tail -f storage/logs/laravel.log
 ```
 
-## 🏗️ Architecture & Design Decisions
-
-### Why Laravel 11?
-- **Latest features** and performance improvements
-- **Streamlined structure** with cleaner configuration
-- **Built-in API support** with `php artisan install:api`
-- **Enhanced security** features
-
-### Why Laravel Sanctum?
-- **Simple token-based authentication** perfect for APIs
-- **No JWT complexity** while maintaining security
-- **Built-in token management** with database storage
-- **Laravel ecosystem integration**
-
-### Code Structure
-- **Separation of concerns** with dedicated API controllers
-- **Consistent error handling** across all endpoints
-- **Proper validation** with Laravel Form Requests principles
-- **RESTful API design** following HTTP standards
-
-## 📈 Performance & Security
-
-### Security Features
-- ✅ **Password hashing** using bcrypt
-- ✅ **Token-based authentication** with Sanctum
-- ✅ **Input validation** on all endpoints
-- ✅ **CORS handling** for cross-origin requests
-- ✅ **Rate limiting** to prevent abuse
-
-### Performance Optimizations
-- ✅ **Efficient database queries** with Eloquent
-- ✅ **Proper HTTP status codes** for client optimization
-- ✅ **JSON responses** for lightweight communication
-- ✅ **Token cleanup** on logout
-
 ## 🚀 Deployment
 
 ### Production Setup
@@ -343,34 +308,5 @@ tail -f storage/logs/laravel.log
    - Set secure database credentials
    - Enable HTTPS
 
-## 📞 Contact Information
-
-**Reyhan Nazera Rusmana**  
-Backend Developer Candidate  
-
-- **Email:** reyhan.nazera@example.com
-- **GitHub:** [github.com/reyhan-nazera](https://github.com/reyhan-nazera)
-- **LinkedIn:** [linkedin.com/in/reyhan-nazera](https://linkedin.com/in/reyhan-nazera)
-
-## 📄 License
-
-This project is created for job application purposes and demonstration of technical skills.
-
----
-
-## 💼 Submission Details
-
-**Company:** PT SKK  
-**Position:** Backend Developer  
-**Test Requirements:** ✅ All completed  
-**Submission Date:** June 21, 2025  
-**Deadline:** June 24, 2025 12:00 WIB  
-
-### 📦 Submission Package Includes:
-- ✅ Complete Laravel 11 source code
-- ✅ Postman collection with auto-token management
-- ✅ Comprehensive documentation
-- ✅ Setup and testing instructions
-- ✅ Professional code structure
 
 **Thank you for reviewing my submission. I look forward to discussing this implementation and my approach to backend development.**
