@@ -109,10 +109,6 @@ The API will be available at `http://localhost:8000`
 
 ## 📚 API Documentation
 
-### Base URL
-```
-http://localhost:8000/api
-```
 
 ### Endpoints
 
@@ -262,12 +258,6 @@ Accept: application/json
 ```bash
 # Run Laravel tests
 php artisan test
-
-# Check code style
-./vendor/bin/phpcs
-
-# Fix code style
-./vendor/bin/phpcbf
 ```
 
 ### Debugging
