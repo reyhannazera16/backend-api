@@ -125,21 +125,6 @@ The API will be available at `http://localhost:8000`
 }
 ```
 
-**Response (201):**
-```json
-{
-    "status": "success",
-    "message": "User registered successfully",
-    "data": {
-        "user": {
-            "id": 1,
-            "name": "Reyhan Nazera Rusmana",
-            "email": "reyhan@example.com",
-            "created_at": "2025-06-21T10:30:00.000000Z"
-        }
-    }
-}
-```
 
 #### 2. Login User
 **POST** `/auth/login`
@@ -152,22 +137,6 @@ The API will be available at `http://localhost:8000`
 }
 ```
 
-**Response (200):**
-```json
-{
-    "status": "success",
-    "message": "Login successful",
-    "data": {
-        "user": {
-            "id": 1,
-            "name": "Reyhan Nazera Rusmana",
-            "email": "reyhan@example.com"
-        },
-        "access_token": "1|abcdefgh123456789...",
-        "token_type": "Bearer"
-    }
-}
-```
 
 #### 3. Get User Profile (Protected)
 **GET** `/user/profile`
@@ -178,23 +147,6 @@ Authorization: Bearer {access_token}
 Accept: application/json
 ```
 
-**Response (200):**
-```json
-{
-    "status": "success",
-    "message": "User data retrieved successfully",
-    "data": {
-        "user": {
-            "id": 1,
-            "name": "Reyhan Nazera Rusmana",
-            "email": "reyhan@example.com",
-            "email_verified_at": null,
-            "created_at": "2025-06-21T10:30:00.000000Z",
-            "updated_at": "2025-06-21T10:30:00.000000Z"
-        }
-    }
-}
-```
 
 #### 4. User Endpoint 
 **GET** `/user`
@@ -205,19 +157,6 @@ Authorization: Bearer {access_token}
 Accept: application/json
 ```
 
-**Response (200):**
-```json
-{
-    "status": "success",
-    "data": {
-        "id": 1,
-        "name": "Reyhan Nazera Rusmana",
-        "email": "reyhan@example.com",
-        "created_at": "2025-06-21T10:30:00.000000Z",
-        "updated_at": "2025-06-21T10:30:00.000000Z"
-    }
-}
-```
 
 ### HTTP Status Codes
 
