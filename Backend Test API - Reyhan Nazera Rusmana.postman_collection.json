@@ -1,0 +1,477 @@
+{
+	"info": {
+		"_postman_id": "4f31a618-6ffb-4286-90a4-9feee17bb479",
+		"name": "Laravel Backend Test API - Reyhan Nazera Rusmana",
+		"description": "API Collection for Backend Developer Test - PT SKK\n\nEndpoints:\n\n1. Membuat API register user\n    \n2. Membuat API untuk mendapatkan access token (Authentication) dari user  \n    yg sudah register (bisa menggunakan Laravel sanctum)\n    \n3. Membuat API untuk get data user dengan menggunakan access token dari  \n    point no 2\n    \n\nCara menggunakan :\n\n1. Jalankan Laravel : php artisan serve\n    \n2. jika mau cek bisa menggunakan localhost/up untuk memastikan server jalan atau engga\n    \n3. Register dan masukan email, password\n    \n4. Token auto save ketika login\n    \n5. Get user otomatis ketika user login",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46063353",
+		"_collection_link": "https://reyhan-880871.postman.co/workspace/Reyhan's-Workspace~01f03789-a2cd-4acd-860c-963cccc27ef9/collection/46063353-4f31a618-6ffb-4286-90a4-9feee17bb479?action=share&source=collection_link&creator=46063353"
+	},
+	"item": [
+		{
+			"name": "1. Register User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Registration Status Check', function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201, 409]);",
+							"});",
+							"",
+							"if (pm.response.code === 201) {",
+							"    pm.test('User Created Successfully', function () {",
+							"        var jsonData = pm.response.json();",
+							"        pm.expect(jsonData.status).to.eql('success');",
+							"        pm.expect(jsonData.data.user).to.have.property('id');",
+							"        pm.expect(jsonData.data.user).to.have.property('email');",
+							"    });",
+							"    console.log('✅ User registered successfully');",
+							"} else if (pm.response.code === 409) {",
+							"    console.log('ℹ️ User already exists - this is normal');",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Reyhan Nazera Rusmana\",\n    \"email\": \"reyhan@ptskk.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/auth/register",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				},
+				"description": "Create a new user account with name, email and password.\n\nRequest Body:\n- name: User's full name\n- email: Valid email address\n- password: Minimum 8 characters\n- password_confirmation: Must match password\n\nResponse:\n- 201: User created successfully\n- 409: User already exists\n- 422: Validation errors"
+			},
+			"response": []
+		},
+		{
+			"name": "2. Login User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Login Successful', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Access Token Received', function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.data).to.have.property('access_token');",
+							"    pm.expect(jsonData.data.access_token).to.be.a('string');",
+							"    pm.expect(jsonData.data.access_token.length).to.be.greaterThan(10);",
+							"});",
+							"",
+							"pm.test('User Data Included', function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.data.user).to.have.property('id');",
+							"    pm.expect(jsonData.data.user).to.have.property('email');",
+							"});",
+							"",
+							"// ENHANCED: Automatically save token and set for all subsequent requests",
+							"if (pm.response.code === 200) {",
+							"    var responseJson = pm.response.json();",
+							"    var token = responseJson.data.access_token;",
+							"    ",
+							"    // Save to environment variable",
+							"    pm.environment.set('access_token', token);",
+							"    ",
+							"    // Also save to collection variable for immediate use",
+							"    pm.collectionVariables.set('access_token', token);",
+							"    ",
+							"    // Set as global variable for all requests",
+							"    pm.globals.set('access_token', token);",
+							"    ",
+							"    console.log('🔑 ACCESS TOKEN SAVED SUCCESSFULLY!');",
+							"    console.log('✅ Token saved to Environment, Collection, and Global variables');",
+							"    console.log('🎯 Token preview:', token.substring(0, 30) + '...');",
+							"    console.log('📌 Next requests will automatically use this token');",
+							"    ",
+							"    // Verify token is saved",
+							"    if (pm.environment.get('access_token') === token) {",
+							"        console.log('✅ Environment variable confirmed');",
+							"    }",
+							"    ",
+							"    pm.test('Token Auto-Save Verification', function () {",
+							"        pm.expect(pm.environment.get('access_token')).to.eql(token);",
+							"        pm.expect(token).to.match(/^\\d+\\|.+/); // Sanctum token format",
+							"    });",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"reyhan@ptskk.com\",\n    \"password\": \"password123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/auth/login",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				},
+				"description": "Authenticate user and receive access token using Laravel Sanctum.\n\nRequest Body:\n- email: User's email address\n- password: User's password\n\nResponse:\n- 200: Login successful with access token\n- 401: Invalid credentials\n- 422: Validation errors\n\nThe access token will be automatically saved to environment variables for use in subsequent requests."
+			},
+			"response": []
+		},
+		{
+			"name": "3. Get User Profile",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// ENHANCED: Pre-request script to ensure token is available",
+							"var token = pm.environment.get('access_token') || pm.collectionVariables.get('access_token') || pm.globals.get('access_token');",
+							"",
+							"if (!token) {",
+							"    console.log('❌ No access token found! Please run Login request first.');",
+							"    console.log('💡 Token should be automatically saved after successful login');",
+							"} else {",
+							"    console.log('✅ Access token found and ready to use');",
+							"    console.log('🔑 Token preview:', token.substring(0, 30) + '...');",
+							"    ",
+							"    // Ensure token is set in request header",
+							"    pm.request.headers.add({",
+							"        key: 'Authorization',",
+							"        value: 'Bearer ' + token",
+							"    });",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Profile Retrieved Successfully', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Complete User Data Returned', function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.status).to.eql('success');",
+							"    pm.expect(jsonData.data.user).to.have.property('id');",
+							"    pm.expect(jsonData.data.user).to.have.property('name');",
+							"    pm.expect(jsonData.data.user).to.have.property('email');",
+							"    pm.expect(jsonData.data.user).to.have.property('created_at');",
+							"});",
+							"",
+							"pm.test('Authentication Working', function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.include('successfully');",
+							"});",
+							"",
+							"pm.test('Token Authentication Successful', function () {",
+							"    pm.expect(pm.response.code).to.not.eql(401);",
+							"    console.log('🔐 Token authentication working perfectly!');",
+							"});",
+							"",
+							"console.log('👤 User profile retrieved successfully');",
+							"",
+							"// Display user info in console",
+							"if (pm.response.code === 200) {",
+							"    var user = pm.response.json().data.user;",
+							"    console.log('📋 USER DETAILS:');",
+							"    console.log('   ID:', user.id);",
+							"    console.log('   Name:', user.name);",
+							"    console.log('   Email:', user.email);",
+							"    console.log('   Created:', user.created_at);",
+							"} else if (pm.response.code === 401) {",
+							"    console.log('❌ AUTHENTICATION FAILED!');",
+							"    console.log('💡 Please run the Login request first to get a valid token');",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/user/profile",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"profile"
+					]
+				},
+				"description": "Retrieve authenticated user data using the access token from login.\n\nHeaders Required:\n- Authorization: Bearer {access_token}\n- Accept: application/json\n\nResponse:\n- 200: User data retrieved successfully\n- 401: Unauthorized (invalid or missing token)\n\nThis demonstrates protected route functionality using Laravel Sanctum authentication."
+			},
+			"response": []
+		},
+		{
+			"name": "4. User Endpoint",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Auto-set token from saved variables",
+							"var token = pm.environment.get('access_token') || pm.collectionVariables.get('access_token') || pm.globals.get('access_token');",
+							"",
+							"if (token) {",
+							"    console.log('✅ Token auto-loaded for Laravel default endpoint');",
+							"    pm.request.headers.add({",
+							"        key: 'Authorization',",
+							"        value: 'Bearer ' + token",
+							"    });",
+							"} else {",
+							"    console.log('⚠️ No token found - please login first');",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Default User Endpoint Works', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('User Object Returned', function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.data).to.have.property('id');",
+							"    pm.expect(jsonData.data).to.have.property('email');",
+							"});",
+							"",
+							"if (pm.response.code === 200) {",
+							"    console.log('✅ Laravel default /api/user endpoint working with auto-token');",
+							"} else if (pm.response.code === 401) {",
+							"    console.log('❌ Authentication failed - please login first');",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/user",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"user"
+					]
+				},
+				"description": "Laravel's default authenticated user endpoint (/api/user).\n\nThis is the standard Laravel endpoint that comes with Sanctum authentication.\nIt returns the currently authenticated user object."
+			},
+			"response": []
+		},
+		{
+			"name": "5. Logout User",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Auto-set token for logout request",
+							"var token = pm.environment.get('access_token') || pm.collectionVariables.get('access_token') || pm.globals.get('access_token');",
+							"",
+							"if (token) {",
+							"    console.log('✅ Token auto-loaded for logout');",
+							"    pm.request.headers.add({",
+							"        key: 'Authorization',",
+							"        value: 'Bearer ' + token",
+							"    });",
+							"} else {",
+							"    console.log('⚠️ No token found - user might already be logged out');",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Logout Successful', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Success Message Returned', function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.status).to.eql('success');",
+							"});",
+							"",
+							"// Clear all saved tokens after successful logout",
+							"if (pm.response.code === 200) {",
+							"    pm.environment.set('access_token', '');",
+							"    pm.collectionVariables.set('access_token', '');",
+							"    pm.globals.set('access_token', '');",
+							"    ",
+							"    console.log('🚪 LOGOUT SUCCESSFUL!');",
+							"    console.log('✅ All access tokens cleared from:');",
+							"    console.log('   - Environment variables');",
+							"    console.log('   - Collection variables'); ",
+							"    console.log('   - Global variables');",
+							"    console.log('🔒 User is now fully logged out');",
+							"} else {",
+							"    console.log('❌ Logout failed - check if user was logged in');",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/auth/logout",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"logout"
+					]
+				},
+				"description": "Logout user and revoke the current access token.\n\nThis demonstrates proper session management by invalidating the token server-side.\nAfter logout, the token will be cleared from environment variables."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Global pre-request script",
+					"console.log('🚀 Making request to:', pm.request.url.toString());"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Global test - runs after every request",
+					"pm.test('Response time is reasonable', function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(3000);",
+					"});",
+					"",
+					"pm.test('Response is JSON', function () {",
+					"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+					"});"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
